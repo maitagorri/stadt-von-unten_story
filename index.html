@@ -31,10 +31,11 @@
         <script src="js/labelgun.min.js"></script>
         <script src="js/labels.js"></script>
         <script src="data/Dragoner_0.js"></script>
+        <script src="data/Gewerbe_1.js"></script>
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[52.4939302541,13.3838418578],[52.4965498003,13.3907904063]]);
+        }).fitBounds([[52.492753361,13.3815080379],[52.4969324327,13.3925932481]]);
         var hash = new L.Hash(map);
         map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
         var bounds_group = new L.featureGroup([]);
@@ -82,6 +83,53 @@
         });
         bounds_group.addLayer(layer_Dragoner_0);
         map.addLayer(layer_Dragoner_0);
+        function pop_Gewerbe_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? Autolinker.link(String(feature.properties['id'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Name</strong><br />' + (feature.properties['Name'] !== null ? Autolinker.link(String(feature.properties['Name'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Picture'] !== null ? Autolinker.link(String(feature.properties['Picture'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Gewerbe_1_0() {
+            return {
+                pane: 'pane_Gewerbe_1',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(229,235,153,1.0)',
+            }
+        }
+        map.createPane('pane_Gewerbe_1');
+        map.getPane('pane_Gewerbe_1').style.zIndex = 401;
+        map.getPane('pane_Gewerbe_1').style['mix-blend-mode'] = 'normal';
+        var layer_Gewerbe_1 = new L.geoJson(json_Gewerbe_1, {
+            attribution: '<a href=""></a>',
+            pane: 'pane_Gewerbe_1',
+            onEachFeature: pop_Gewerbe_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Gewerbe_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Gewerbe_1);
+        map.addLayer(layer_Gewerbe_1);
         setBounds();
         </script>
     </body>
