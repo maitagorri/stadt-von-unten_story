@@ -35,7 +35,7 @@
         <script>
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[52.492753361,13.3815080379],[52.4969324327,13.3925932481]]);
+        }).setView(L.latLng(52.495085,13.3865977),18);
         var hash = new L.Hash(map);
         map.attributionControl.addAttribution('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a>');
         var bounds_group = new L.featureGroup([]);
@@ -49,10 +49,13 @@
         function pop_Dragoner_0(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Name'] !== null ? Autolinker.link(String(feature.properties['Name'])) : '') + '</td>\
+                        <td colspan="2">' + (feature.properties['Name'] !== null ? Autolinker.link('Dragonerareal') : '') + '</td>\
                     </tr>\
                 </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
+            layer.bindPopup(popupContent, {maxHeight: 400}).on("click", function (event) {
+				map.fitBounds(event.target.getBounds(),'animate');
+				}
+			);
         }
 
         function style_Dragoner_0_0() {
@@ -80,16 +83,29 @@
         });
         bounds_group.addLayer(layer_Dragoner_0);
         map.addLayer(layer_Dragoner_0);
+		
+		function clickZoom(e) {
+			L.DomEvent.stopPropagation(e);
+			map.flyTo(e.target.getLatLng(),18);
+		}
+		
         function pop_Gewerbe_1(feature, layer) {
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2"><strong>Name</strong><br />' + (feature.properties['Name'] !== null ? Autolinker.link(String(feature.properties['Name'])) : '') + '</td>\
+                        <td colspan="2"><strong>' + (feature.properties['Name'] !== null ? Autolinker.link(String(feature.properties['Name'])) : '') + '</strong></td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Picture'] !== null ? Autolinker.link(String(feature.properties['Picture'])) : '') + '</td>\
+                        <td colspan="2"><img src=' + '"http://stadtvonunten.de/wp-content/uploads/2014/07/gelaende.png"' + ' style="width:200px;height:200px;" /> </td>\
                     </tr>\
-                </table>';
-            layer.bindPopup(popupContent, {maxHeight: 400});
+					 <tr>\
+                        <td colspan="2"><strong>... erzählt:</strong><br />' + 'Lorem ipsum dolor sit amet, pri cu prompta docendi signiferumque, alterum comprehensam vim at. Vel no graece malorum perfecto, sea aliquam eloquentiam ne, errem adolescens mea id. Eius petentium contentiones eum ex. Facilisis similique cum id, vim ad porro aperiri urbanitas. Minim audiam ne usu, eu vix justo elitr propriae.' + '</td>\
+                    </tr>'+
+/*                    <tr>\
+                        <td colspan="2"><strong>Position</strong><br />' + (feature.geometry.coordinates !== null ? Autolinker.link(String(feature.geometry.coordinates)) : '') + '</td>\
+                    </tr>\
+*/                '</table>';
+            layer.on('click',clickZoom).bindPopup(popupContent, {autoPan: true, maxHeight:400, keepInView:true});
+//			map.flyTo(feature.geometry.coordinates,19);
         }
 
         function style_Gewerbe_1_0() {
@@ -107,6 +123,17 @@
                 fillColor: 'rgba(229,235,153,1.0)',
             }
         }
+		
+		// we have to be able to get out of the storyview again...
+		<!-- function onMapClick(e) { -->
+			<!-- popup -->
+			<!-- .setLatLng(e.latlng) -->
+			<!-- .setContent("You clicked the map at " + e.latlng.toString()) -->
+			<!-- .openOn(mymap); -->
+		<!-- } -->
+
+		<!-- mymap.on('click', onMapClick); -->
+		
         map.createPane('pane_Gewerbe_1');
         map.getPane('pane_Gewerbe_1').style.zIndex = 401;
         map.getPane('pane_Gewerbe_1').style['mix-blend-mode'] = 'normal';
